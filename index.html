@@ -434,7 +434,8 @@
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Server error occurred');
             }
 
             const data = await response.json();
@@ -447,7 +448,7 @@
         } catch (error) {
             console.error('Error:', error);
             loadingIndicator.remove();
-            addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+            addMessage(`Error: ${error.message || 'Unable to connect to the AI service. Please try again later.'}`, 'bot');
         }
     }
 
