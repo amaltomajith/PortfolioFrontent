@@ -649,28 +649,44 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Origin': 'https://amaltom.life'
                     },
+                    mode: 'cors',
+                    credentials: 'omit',
                     body: JSON.stringify({ message })
                 });
 
                 console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 console.log('Response data:', data);
 
                 // Remove loading indicator
                 loadingIndicator.remove();
 
-                if (!response.ok) {
-                    throw new Error(data.error || data.details || 'Failed to get response from the AI');
+                if (data.error) {
+                    throw new Error(data.error);
                 }
                 
                 // Add bot response
-                addMessage(data.response, 'bot');
+                addMessage(data.response || 'Sorry, I could not process your request.', 'bot');
             } catch (error) {
                 console.error('Detailed error:', error);
                 loadingIndicator.remove();
-                addMessage(`Error: ${error.message}. Please try again.`, 'bot');
+                
+                let errorMessage = 'An error occurred. Please try again.';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Unable to connect to the AI service. Please check your internet connection and try again.';
+                } else if (error.message.includes('HTTP error')) {
+                    errorMessage = 'Server error. Please try again in a few moments.';
+                }
+                
+                addMessage(errorMessage, 'bot');
                 
                 // Log additional error details
                 if (error.response) {
