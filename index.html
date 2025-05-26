@@ -7,7 +7,7 @@
     <title>Amal Tom | Code Craftsman & Security Enthusiast</title>
     <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div id="header">
@@ -205,7 +205,7 @@
 </div>
 
 <!-- Chatbot Modal -->
-<div class="chatbot-modal">
+<div class="chatbot-modal" style="display: none;">
     <div class="chat-container">
         <div class="chat-header">
             <h2>AI Assistant</h2>
@@ -289,23 +289,19 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .chatbot-modal.active {
-    opacity: 1;
-    visibility: visible;
+    display: flex;
 }
 
 .chat-container {
-    background: #fff;
+    background: #080808;
     width: 90%;
     max-width: 500px;
     height: 80vh;
@@ -315,7 +311,9 @@
     transform: translateY(20px);
     opacity: 0;
     transition: transform 0.4s ease, opacity 0.4s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    z-index: 1001;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .chatbot-modal.active .chat-container {
@@ -324,9 +322,160 @@
 }
 
 /* Blur effect for background */
-.blur-background {
+body.blur-background > *:not(.chatbot-modal) {
     filter: blur(5px);
     transition: filter 0.3s ease;
+}
+
+.chat-header {
+    padding: 15px 20px;
+    background: #181818;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-header h2 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: #080808;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #181818;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #ff004f;
+    border-radius: 3px;
+}
+
+.chat-input {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+    background: #181818;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    outline: none;
+    background: #080808;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+}
+
+.chat-input input:focus {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-input input::placeholder {
+    color: #555;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background: #ff004f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-weight: 500;
+}
+
+.chat-input button:hover {
+    background: #cc0040;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s ease;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #ff004f;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    max-width: 85%;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.user {
+    background: #ff004f;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 2px;
+}
+
+.message.bot {
+    background: #181818;
+    color: #fff;
+    border-bottom-left-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Loading animation */
+.loading {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    background: #181818;
+    border-radius: 8px;
+    max-width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.loading span {
+    width: 6px;
+    height: 6px;
+    background: #ff004f;
+    border-radius: 50%;
+    animation: bounce 0.5s ease-in-out infinite;
+}
+
+.loading span:nth-child(2) { animation-delay: 0.1s; }
+.loading span:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 </style>
 
@@ -427,122 +576,124 @@
 </script>
 
 <script>
-    // Update the chatbot functionality
-    document.getElementById('chat-now-btn').addEventListener('click', function() {
-        const modal = document.querySelector('.chatbot-modal');
-        document.body.classList.add('blur-background');
-        
-        // Show modal first
-        modal.style.display = 'flex';
-        
-        // Trigger reflow
-        void modal.offsetWidth;
-        
-        // Add active class for animation
-        modal.classList.add('active');
-        
-        // Add welcome message if chat is empty
-        if (!chatMessages.hasChildNodes()) {
-            addMessage("Hello! I'm your AI assistant. How can I help you today?", 'bot');
-        }
-    });
-
-    document.querySelector('.close-btn').addEventListener('click', function() {
-        const modal = document.querySelector('.chatbot-modal');
-        
-        // Remove active class first
-        modal.classList.remove('active');
-        document.body.classList.remove('blur-background');
-        
-        // Wait for animation to complete before hiding
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
-    });
-
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.querySelector('.chat-messages');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+    const chatNowBtn = document.getElementById('chat-now-btn');
+    const closeBtn = document.querySelector('.close-btn');
+    const modal = document.querySelector('.chatbot-modal');
 
-    function addMessage(message, type) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', type);
-        messageDiv.textContent = message;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function addLoadingIndicator() {
-        const loadingDiv = document.createElement('div');
-        loadingDiv.classList.add('message', 'bot', 'loading');
-        loadingDiv.innerHTML = '<span></span><span></span><span></span>';
-        chatMessages.appendChild(loadingDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        return loadingDiv;
-    }
-
-    async function sendMessage() {
-        const message = userInput.value.trim();
-        if (!message) return;
-
-        // Add user message
-        addMessage(message, 'user');
-        userInput.value = '';
-
-        // Add loading indicator
-        const loadingIndicator = addLoadingIndicator();
-
-        try {
-            console.log('Sending message to backend:', message);
+    // Initialize chat functionality only if all elements are found
+    if (chatMessages && userInput && sendBtn && chatNowBtn && closeBtn && modal) {
+        chatNowBtn.addEventListener('click', function() {
+            document.body.classList.add('blur-background');
+            modal.style.display = 'flex';
             
-            // Call to your Vercel-hosted backend API
-            const response = await fetch('https://portfolio-backend-five-wine.vercel.app/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ message })
-            });
-
-            console.log('Response status:', response.status);
-            const data = await response.json();
-            console.log('Response data:', data);
-
-            // Remove loading indicator
-            loadingIndicator.remove();
-
-            if (!response.ok) {
-                throw new Error(data.error || data.details || 'Failed to get response from the AI');
+            // Trigger reflow
+            void modal.offsetWidth;
+            
+            // Add active class for animation
+            modal.classList.add('active');
+            
+            // Add welcome message if chat is empty
+            if (!chatMessages.hasChildNodes()) {
+                addMessage("Hello! I'm your AI assistant. How can I help you today?", 'bot');
             }
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.classList.remove('active');
+            document.body.classList.remove('blur-background');
             
-            // Add bot response
-            addMessage(data.response, 'bot');
-        } catch (error) {
-            console.error('Detailed error:', error);
-            loadingIndicator.remove();
-            addMessage(`Error: ${error.message}. Please try again.`, 'bot');
-            
-            // Log additional error details
-            if (error.response) {
-                console.error('Response headers:', error.response.headers);
-                console.error('Response status:', error.response.status);
-                try {
-                    const errorBody = await error.response.text();
-                    console.error('Response body:', errorBody);
-                } catch (e) {
-                    console.error('Could not read error response body');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        });
+
+        function addMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', type);
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addLoadingIndicator() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('message', 'bot', 'loading');
+            loadingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return loadingDiv;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            // Add loading indicator
+            const loadingIndicator = addLoadingIndicator();
+
+            try {
+                console.log('Sending message to backend:', message);
+                
+                const response = await fetch('https://portfolio-backend-five-wine.vercel.app/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                // Remove loading indicator
+                loadingIndicator.remove();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.details || 'Failed to get response from the AI');
+                }
+                
+                // Add bot response
+                addMessage(data.response, 'bot');
+            } catch (error) {
+                console.error('Detailed error:', error);
+                loadingIndicator.remove();
+                addMessage(`Error: ${error.message}. Please try again.`, 'bot');
+                
+                // Log additional error details
+                if (error.response) {
+                    console.error('Response headers:', error.response.headers);
+                    console.error('Response status:', error.response.status);
+                    try {
+                        const errorBody = await error.response.text();
+                        console.error('Response body:', errorBody);
+                    } catch (e) {
+                        console.error('Could not read error response body');
+                    }
                 }
             }
         }
-    }
 
-    sendBtn.addEventListener('click', sendMessage);
-    userInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
-    });
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    } else {
+        console.error('Some chat elements were not found in the DOM');
+    }
+});
 </script>
 </body>
 </html>
