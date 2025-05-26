@@ -383,6 +383,10 @@
     document.getElementById('chat-now-btn').addEventListener('click', function() {
         document.body.classList.add('blur-background');
         document.querySelector('.chatbot-modal').classList.add('active');
+        // Add welcome message if chat is empty
+        if (!chatMessages.hasChildNodes()) {
+            addMessage("Hello! I'm your AI assistant. How can I help you today?", 'bot');
+        }
     });
 
     document.querySelector('.close-btn').addEventListener('click', function() {
@@ -433,22 +437,21 @@
                 body: JSON.stringify({ message })
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Server error occurred');
-            }
-
             const data = await response.json();
-            
+
             // Remove loading indicator
             loadingIndicator.remove();
+
+            if (!response.ok) {
+                throw new Error(data.error || data.details || 'Failed to get response from the AI');
+            }
             
             // Add bot response
             addMessage(data.response, 'bot');
         } catch (error) {
             console.error('Error:', error);
             loadingIndicator.remove();
-            addMessage(`Error: ${error.message || 'Unable to connect to the AI service. Please try again later.'}`, 'bot');
+            addMessage(`Error: ${error.message}`, 'bot');
         }
     }
 
