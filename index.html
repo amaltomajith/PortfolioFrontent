@@ -479,6 +479,72 @@ body.blur-background > *:not(.chatbot-modal) {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
 }
+
+/* Button Animations */
+.btn2 {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: scale(1);
+    background: #ff004f;
+}
+
+.btn2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: all 0.4s ease;
+}
+
+.btn2:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(255, 0, 79, 0.2);
+}
+
+.btn2:hover::before {
+    left: 100%;
+}
+
+.btn2:active {
+    transform: scale(0.98);
+}
+
+/* Form submit button loading state */
+.btn2.loading {
+    position: relative;
+    cursor: wait;
+    padding-right: 40px;
+}
+
+.btn2.loading::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-right-color: #ffffff;
+    border-radius: 50%;
+    animation: buttonLoader 0.8s linear infinite;
+}
+
+@keyframes buttonLoader {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
 </style>
 
 <script>
@@ -530,16 +596,62 @@ body.blur-background > *:not(.chatbot-modal) {
     const form = document.forms['submit-to-google-sheet'];
     const msg = document.getElementById("msg");
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-        .then(response => {
-            msg.innerHTML = "Message sent successfully";
-            setTimeout(() => { msg.innerHTML = ""; }, 5000);
-            form.reset();
-        })
-        .catch(error => console.error('Error!', error.message));
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Add loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        try {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: new FormData(form)
+            });
+
+            if (response.ok) {
+                msg.innerHTML = "Message sent successfully";
+                form.reset();
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('Error!', error.message);
+            msg.innerHTML = "Error sending message. Please try again.";
+        } finally {
+            // Remove loading state
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit';
+            
+            // Clear success message after 5 seconds
+            setTimeout(() => {
+                msg.innerHTML = "";
+            }, 5000);
+        }
     });
+
+    // Add hover effect for download CV button
+    const downloadBtn = document.querySelector('a[download].btn2');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+        
+        downloadBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        downloadBtn.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        
+        downloadBtn.addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1.02)';
+        });
+    }
 </script>
 
 <script>
